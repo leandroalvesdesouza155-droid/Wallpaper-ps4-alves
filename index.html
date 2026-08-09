@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PS4 Wallpapers</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#07080d;color:#fff;min-height:100vh}
+header{padding:34px 7%;background:linear-gradient(135deg,#0b0d16,#11182b);border-bottom:1px solid #222}
+.logo{font-size:30px;font-weight:800;letter-spacing:.5px}
+.logo span{color:#4f8cff}
+.tag{margin-top:7px;color:#9da7bb}
+.search{margin-top:24px;display:flex;gap:10px;max-width:720px}
+.search input{flex:1;padding:15px 18px;border-radius:12px;border:1px solid #30384d;background:#0b0f19;color:white;font-size:16px;outline:none}
+.search button{padding:0 20px;border:0;border-radius:12px;background:#4f8cff;color:white;font-weight:700;cursor:pointer}
+main{padding:28px 7% 60px}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px}
+.cat{border:1px solid #2d3445;background:#10131c;color:#cbd3e4;padding:10px 15px;border-radius:999px;cursor:pointer}
+.cat.active,.cat:hover{background:#4f8cff;color:white;border-color:#4f8cff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.card{background:#10131c;border:1px solid #242b3a;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px #0005}
+.card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.info{padding:14px}
+.info h3{font-size:18px;margin-bottom:5px}
+.info p{color:#8f9ab0;font-size:13px;margin-bottom:13px}
+.download{display:block;text-align:center;text-decoration:none;background:#4f8cff;color:white;padding:11px;border-radius:10px;font-weight:700}
+.download:hover{background:#3d77df}
+.empty{display:none;text-align:center;color:#9da7bb;padding:50px}
+footer{border-top:1px solid #222;padding:25px 7%;color:#727c90;text-align:center;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">PS4 <span>WALLPAPERS</span></div>
+  <div class="tag">Wallpapers em 1920×1080, prontos para usar no PS4.</div>
+  <div class="search">
+    <input id="search" placeholder="Pesquisar wallpaper..." oninput="render()">
+    <button onclick="document.getElementById('search').focus()">Buscar</button>
+  </div>
+</header>
+
+<main>
+  <div class="categories" id="categories"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty">Nenhum wallpaper encontrado.</div>
+</main>
+
+<footer>PS4 Wallpapers • Imagens em 1920×1080 • Feito para uso pessoal</footer>
+
+<script>
+const wallpapers = [{"title": "Neon City", "category": "Neon", "file": "neon-city.jpg"}, {"title": "Cosmic Space", "category": "Espaço", "file": "cosmic-space.jpg"}, {"title": "Forest Night", "category": "Natureza", "file": "forest-night.jpg"}, {"title": "Dark Minimal", "category": "Dark", "file": "dark-minimal.jpg"}, {"title": "Gaming Energy", "category": "Games", "file": "gaming-energy.jpg"}, {"title": "Purple Wave", "category": "Games", "file": "purple-wave.jpg"}];
+let active = "Todos";
+
+function setupCategories() {
+  const cats = ["Todos", ...new Set(wallpapers.map(w => w.category))];
+  document.getElementById("categories").innerHTML = cats.map(c =>
+    `<button class="cat ${c===active?'active':''}" onclick="setCategory('${c}')">${c}</button>`
+  ).join("");
+}
+
+function setCategory(c) {
+  active = c;
+  setupCategories();
+  render();
+}
+
+function render() {
+  const q = document.getElementById("search").value.toLowerCase();
+  const filtered = wallpapers.filter(w =>
+    (active === "Todos" || w.category === active) &&
+    (w.title.toLowerCase().includes(q) || w.category.toLowerCase().includes(q))
+  );
+
+  document.getElementById("grid").innerHTML = filtered.map(w => `
+    <article class="card">
+      <img src="${w.file}" alt="${w.title}">
+      <div class="info">
+        <h3>${w.title}</h3>
+        <p>${w.category} • 1920×1080</p>
+        <a class="download" href="${w.file}" download>Baixar wallpaper</a>
+      </div>
+    </article>
+  `).join("");
+
+  document.getElementById("empty").style.display = filtered.length ? "none" : "block";
+}
+setupCategories();
+render();
+</script>
+</body>
+</html>
